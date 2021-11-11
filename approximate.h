@@ -1,3 +1,6 @@
+#ifndef APPROXIMATE
+#define APPROXIMATE
+
 #include <iostream>
 #include <vector>
 #include <stack>
@@ -6,6 +9,8 @@
 #include <set>
 #include <limits.h>
 #include <queue>
+
+#include "graph.h"
 
 using namespace std;
 
@@ -17,7 +22,7 @@ struct edge{
     int weight;
 };
 
-struct CompareCost{
+struct CompareEdgeCost{
     bool operator()(edge const& e1, edge const& e2)
     {
         return e1.weight > e2.weight;
@@ -31,27 +36,6 @@ void addEdge(int** graph, int v1, int v2, int weight){
     return;
 }
 
-void printGraph(int** graph, int v){
-    for(int i =0; i <= v; i++){
-        cout << "[";
-        for(int j=0; j<=v; j++){
-            cout<< graph[i][j] << " ";
-        }
-        cout<<"]"<<endl;
-    }
-}
-
-void printPath(int **graph, int v){
-    for(int i=0; i<=v; i++){
-        for(int j=0; j<=v; j++){
-            if(graph[i][j] != 0){
-                cout<<i<<"->"<<j<<" ";
-            }
-        }
-        //cout<<endl;
-    }
-    cout<<endl;
-}
 
 void printEdges(vector<edge> graph){
     for(std::vector<edge>::size_type it = 0; it != graph.size(); ++it){
@@ -76,7 +60,7 @@ int minEdge(int *key, int *visited, int v){
 vector<edge> prim(int **graph, int v, int *R){
     bool visited[v+1];
     vector<edge>MST;
-    priority_queue<edge, vector<edge>, CompareCost> q;
+    priority_queue<edge, vector<edge>, CompareEdgeCost> q;
     for(int i=0;i<=v;i++){
         visited[i] = false;
     }
@@ -260,24 +244,24 @@ int ** findUnion(vector<edge> graph, vector<edge> K, int v){
     return ret;
 }
 
-vector<edge> kLCA(int** graph, int v, int* R, int k){
-    int **H = new int*[v+1];
-    for(int i=0; i<=v; i++){
-        H[i] = new int[v+1];
-        for(int j=0; j<=v; j++){
+vector<edge> kLCA(Graph* g, int k){
+    int **H = new int*[g->v+1];
+    for(int i=0; i<=g->v; i++){
+        H[i] = new int[g->v+1];
+        for(int j=0; j<=g->v; j++){
             H[i][j] = 0;
-            if(graph[i][j] != 0 && R[j-1] != 0){
-                H[i][j] = graph[i][j];
+            if(g->graph[i][j] != 0 && g->R[j-1] != 0){
+                H[i][j] = g->graph[i][j];
             }
         }
     }
     //printGraph(H, v);
 
-    vector<edge> T = prim(H, v, R);
+    vector<edge> T = prim(H, g->v, g->R);
     //printEdges(T);
     //return H;
     while(true){
-        vector<vector<edge> > fc = fullComponent(T, v, k);
+        vector<vector<edge> > fc = fullComponent(T, g->v, k);
         float r;
         float max = INT_MIN;
         vector<edge> maxK;
@@ -286,7 +270,7 @@ vector<edge> kLCA(int** graph, int v, int* R, int k){
             float t;
             vector<edge> CK;
             CK.clear();
-            int loss = computeLoss(fc[it], v, R, CK);
+            int loss = computeLoss(fc[it], g->v, g->R, CK);
             if(loss != 0)
                 t = computeGain(T, fc[it]) / loss;
             else
@@ -300,54 +284,14 @@ vector<edge> kLCA(int** graph, int v, int* R, int k){
         r = max;
         
         if(r <= 0)
-            return prim(H, v, R);
+            return prim(H, g->v, g->R);
 
-        H = findUnion(H, maxK, v);
-        T = prim(findUnion(T, keepCK, v), v, R);
+        H = findUnion(H, maxK, g->v);
+        T = prim(findUnion(T, keepCK, g->v), g->v, g->R);
         
     }
 
     
 }
 
-
-int main(){
-
-    int v = 10;
-    int **graph = new int*[v+1];
-    for(int i=0; i<=v; i++)
-        graph[i] = new int[v+1];
-
-    addEdge(graph, 5,8,1);
-    addEdge(graph, 5,2,1);
-    addEdge(graph, 9,8,1);
-    addEdge(graph, 7,8,1);
-    addEdge(graph, 10,9,1);
-    addEdge(graph, 6,9,1);
-    addEdge(graph, 6,7,1);
-    addEdge(graph, 3,7,1);
-    addEdge(graph, 6,3,1);
-    addEdge(graph, 1,3,1);
-    addEdge(graph, 1,4,1);
-    addEdge(graph, 4,10,1);
-    addEdge(graph, 2,4,1);
-    addEdge(graph, 1,2,1);
-
-    for(int i = 1; i <= v; i++)
-        addEdge(graph, 0, i, delta);
-    printGraph(graph, v);
-    int R[v] = {1,1,1,1,0,1,1,0,1,0};
-
-    vector<edge> MST = prim(graph, v, R);
-    /*
-    printEdges(MST);
-    vector<vector<edge> > t = fullComponent(MST, v, 1);
-    for(std::vector<edge>::size_type it = 0; it != t.size(); ++it)
-        printEdges(t[it]);
-    */
-    
-    vector<edge> H = kLCA(graph, v, R, 1);
-    printEdges(H);
-
-    return 0;
-}
+#endif
