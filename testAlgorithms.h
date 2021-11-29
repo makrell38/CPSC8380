@@ -58,14 +58,11 @@ void greedy(Graph* g){
         for(int i=0;i<g->v;i++){
             if(con[i] > max){
                 if(T[i] != 1){
-                //if(S[i] == 1 && T[i] != 1){
                     max = con[i];
                     node = i+1;
                 }
             }
         }
-        //cout<<"max: "<<max<<endl;
-        //cout<<"node: "<<node<<endl;
         T[node-1] = 1;
         sendToNeighbors(g,T,node,1);
         check = false;

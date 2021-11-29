@@ -46,7 +46,6 @@ int ** fillOut(Graph* g, int **path, int *T, int jump, int cost){
     if(checkDone(g, copy)){
         if(cost < minCost){
             minCost = cost;
-            //printPath(path, g->v);
             solution = path;
             return path;
         }
@@ -68,11 +67,9 @@ int ** findPath(Graph* g, int* comb, int len){
         path[0][comb[i]] = 1;
         cost += g->delta;
     }
-    //printPath(S, v);
     if(checkDone(g, T)){
         if(cost < minCost){
             minCost = cost;
-            //printPath(path,g->v);
             solution = path;
             return path;
         }
@@ -92,7 +89,6 @@ int* combinations(Graph *g, int* comb, int last, int len){
         ret[len] = g->V[i];
         combinations(g,ret, i, len+1);
     }
-    //printPath(comb, len);
     return comb;
 }
 

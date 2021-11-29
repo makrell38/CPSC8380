@@ -65,7 +65,6 @@ void Graph::setR(int num){
     int t = 0;
     for(int i=0; i<this->v; i++){
         if(this->S[i] != 0){
-            //cout<<i+1<<" ";
             this->R[t] = i+1;
             t++;
         }
@@ -79,7 +78,6 @@ void Graph::printPath(void){
                 cout<<i<<"->"<<j<<" ";
             }
         }
-        //cout<<endl;
     }
     cout<<endl;
 }
@@ -118,7 +116,6 @@ void printPath(int **graph, int v){
                 cout<<i<<"->"<<j<<" ";
             }
         }
-        //cout<<endl;
     }
     cout<<endl;
 }
