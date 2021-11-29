@@ -31,7 +31,7 @@ void sendToNeighbors(Graph* g, int **Tms, int node, int* T){
     queue<int> reached;
     for(int i=1;i<=g->v;i++){
         if(i != node){
-            if(g->graph[node][i] != 0 && g->R[i-1] != 0){
+            if(g->graph[node][i] != 0 && g->S[i-1] != 0){
                 if(T[i-1] == 0){
                     Tms[node][i] = 1;
                     T[i-1] = 1;
@@ -60,7 +60,7 @@ int ** CMST(Graph* g){
         int con[g->v] = {0};
         for(int i=1; i<=g->v; i++){
             for(int j=1; j<=g->v; j++){
-                if(g->graph[i][j] != 0 && Tms[i][j] == 0 && g->R[j-1] != 0){
+                if(g->graph[i][j] != 0 && Tms[i][j] == 0 && g->S[j-1] != 0){
                     con[i-1]++;
                 }
             }
@@ -79,7 +79,7 @@ int ** CMST(Graph* g){
 
         check = true;
         for(int i=0;i<g->v;i++){
-            if(g->R[i] != 0 && T[i] == 0)
+            if(g->S[i] != 0 && T[i] == 0)
                 check = false;
         }
     }
@@ -179,7 +179,7 @@ int ** EDDA(Graph* g, int **Tms){
         }
 
         // if not a destination server or depth is already less than dLimit, conitnue
-        if(g->R[s-1] == 0 || d[s] <= g->dLimit){
+        if(g->S[s-1] == 0 || d[s] <= g->dLimit){
             for(int i =1; i<=g->v;i++){
                 if(Tedda[s][i] != 0){
                     if(!visited[i])
@@ -223,7 +223,7 @@ int ** EDDA(Graph* g, int **Tms){
             // update shortest cost path for each node in R
             for(int i=1; i<=g->v; i++){
                 if(i != s){
-                    if(g->R[i-1] != 0){
+                    if(g->S[i-1] != 0){
                         path t2 = dijkstraClone(g, s, i);
                         if(t2.cost != INT_MAX){
                             if(cost[i] > cost[s] + t2.cost){

@@ -23,6 +23,7 @@ class Graph{
         void printGraph(void);
         void addEdge(int v1, int v2, int weight);
         void setR(int num);
+        void printPath(void);
 };
 
 Graph::Graph(int len){
@@ -71,6 +72,18 @@ void Graph::setR(int num){
     }
 }
 
+void Graph::printPath(void){
+    for(int i=0; i<=this->v; i++){
+        for(int j=0; j<=this->v; j++){
+            if(this->graph[i][j] != 0){
+                cout<<i<<"->"<<j<<" ";
+            }
+        }
+        //cout<<endl;
+    }
+    cout<<endl;
+}
+
 vector<vector<string> > readInData(char* fileName){
     fstream f;
     f.open(fileName, ios::in);
@@ -106,6 +119,27 @@ void printPath(int **graph, int v){
             }
         }
         //cout<<endl;
+    }
+    cout<<endl;
+}
+
+struct edge{
+    int v1;
+    int v2;
+    int weight;
+};
+
+struct CompareEdgeCost{
+    bool operator()(edge const& e1, edge const& e2)
+    {
+        return e1.weight > e2.weight;
+    }
+};
+
+void printEdges(vector<edge> graph){
+    for(std::vector<edge>::size_type it = 0; it != graph.size(); ++it){
+        edge temp = graph[it];
+        cout<<temp.v1<<"->"<<temp.v2<<" ";
     }
     cout<<endl;
 }
