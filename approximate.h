@@ -396,8 +396,8 @@ vector<edge> kLCA(Graph* g, int k){
         vector<edge> keepCK;
         for(std::vector<edge>::size_type it = 0; it != fc.size(); ++it){
             float t;
-            cout<<"full component:"<<endl;
-            printEdges(fc[it]);
+            //cout<<"full component:"<<endl;
+           // printEdges(fc[it]);
             vector<edge> CK;
             CK.clear();
             int loss = computeLoss(fc[it], g->v, g->S, CK);
@@ -411,6 +411,7 @@ vector<edge> kLCA(Graph* g, int k){
                 keepCK = CK;
             }
         }
+        /*
         printEdges(T);
         cout<<"mak "<<endl;
         printEdges(maxK);
@@ -419,6 +420,7 @@ vector<edge> kLCA(Graph* g, int k){
         printEdges(keepCK);
         cout<<"end ck"<<endl;
         cout<<"max"<<max<<endl;
+        */
         r = max;
 
 

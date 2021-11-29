@@ -52,17 +52,22 @@ int ** CMST(Graph* g){
     int** Tms= new int*[g->v+1];
     for(int i=0; i<=g->v; i++){
         Tms[i] = new int[g->v+1];
+        for(int j =0; j<=g->v;j++){
+            Tms[i][j] = 0;
+        }
     }
     int *T = new int[g->v];
     for(int i=0;i<g->v;i++){
         T[i] = 0;
     }
-
+    
     bool check = false;
     while(!check){
         int *con = new int[g->v];
+        for(int k=0;k<g->v;k++){
+            con[k] = 0;
+        }
         for(int i=1; i<=g->v; i++){
-            con[i] = 0;
             for(int j=1; j<=g->v; j++){
                 if(g->graph[i][j] != 0 && Tms[i][j] == 0 && g->S[j-1] != 0){
                     con[i-1]++;
@@ -72,7 +77,7 @@ int ** CMST(Graph* g){
         int max = 0;
         int hold;
         for(int i=0; i<g->v; i++){
-            if(con[i] > max){
+            if(con[i] >= max){
                 max = con[i];
                 hold = i+1;
             }
@@ -88,6 +93,8 @@ int ** CMST(Graph* g){
             }
         }
     }
+    
+    cout<<"CMS done"<<endl;
     return Tms;
 }
 

@@ -111,7 +111,7 @@ int main(){
 
     ofstream myfile;
     
-    
+    cout<<"Fandom algorithm output:"<<endl;
     myfile.open("randomOutputTime.txt", fstream::app);
     auto startRand = std::chrono::high_resolution_clock::now();
     int costRand = random(g);
@@ -121,7 +121,9 @@ int main(){
     myfile<<g->v<<" "<<durationRand.count()<<"\n";
 
     myfile.close();
-    
+    cout<<endl<<endl;
+
+    cout<<"Greedy algorithm output:"<<endl;
     myfile.open("greedyOutputTime.txt", fstream::app);
     auto startGreedy = std::chrono::high_resolution_clock::now();
     int costGreedy = greedy(g);
@@ -129,24 +131,30 @@ int main(){
     auto durationGreedy = std::chrono::duration_cast<std::chrono::microseconds>(stopGreedy - startGreedy);
     myfile<<g->v<<" "<<durationGreedy.count()<<"\n";
     myfile.close();
+    cout<<endl<<endl;
     
     myfile.open("fullOutputTime.txt", fstream::app);
     auto startFull = std::chrono::high_resolution_clock::now();
+    cout<<"Full optimal algorithm output:"<<endl;
     full(g);
     auto stopFull = std::chrono::high_resolution_clock::now();
     auto durationFull = std::chrono::duration_cast<std::chrono::microseconds>(stopFull - startFull);
     myfile<<g->v<<" "<<durationFull.count()<<"\n";
     myfile.close();
+    cout<<endl<<endl;
     
-    
+    cout<<"CMST algorithm output:"<<endl;
     Graph *Tms = new Graph(g->v);
     auto startEdda = std::chrono::high_resolution_clock::now();
     Tms->graph = CMST(g);
-    Tms->printGraph();
+    //Tms->printGraph();
     Tms->printPath();
+    cout<<endl<<endl;
+
+    cout<<"EDDA algorithm output:"<<endl;
     Graph *Tedda = new Graph(g->v);
     Tedda->graph = EDDA(g, Tms->graph);
-    Tedda->printGraph();
+    //Tedda->printGraph();
     Tedda->printPath();
     int costTedda = Tedda->computeCost();
     auto stopEdda = std::chrono::high_resolution_clock::now();
@@ -156,19 +164,21 @@ int main(){
     myfile.open("TeddaOutput.txt", fstream::app);
     myfile<<g->v<<" "<<costTedda<<"\n";
     myfile.close();
-    
+    cout<<endl<<endl;
 
     
-    
+    cout<<"k-LCA algorithm output:"<<endl;
     myfile.open("klcaOutput.txt", fstream::app);
     auto startKlca = std::chrono::high_resolution_clock::now();
     vector<edge> klca = kLCA(g, g->numDestServers);
     printEdges(klca);
+    cout<<endl<<endl;
     Graph *g2 = new Graph(g->v);
     for(std::vector<edge>::size_type it = 0; it != klca.size(); ++it){
         g2->graph[klca[it].v1][klca[it].v2] = klca[it].weight;
     }
     Graph *something = new Graph(g->v);
+    cout<<"EDDA on k-LCA algorithm output:"<<endl;
     something->graph = EDDA(g, g2->graph);
     something->printPath();
     int costklca = something->computeCost();
@@ -176,6 +186,7 @@ int main(){
     auto durationKlca = std::chrono::duration_cast<std::chrono::microseconds>(stopKlca - startKlca);
     myfile<<g->v<<" "<<costklca<<"\n";
     myfile.close();
+    cout<<endl<<endl;
     
 
     return 0;
