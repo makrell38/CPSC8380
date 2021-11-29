@@ -387,6 +387,7 @@ vector<edge> kLCA(Graph* g, int k){
     */
 
     vector<edge> T = prim(H, g->v, g->S);
+    printEdges(T);
     while(true){
         vector<vector<edge> > fc = fullComponent(g, k);
         float r;

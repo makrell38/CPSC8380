@@ -53,12 +53,16 @@ int ** CMST(Graph* g){
     for(int i=0; i<=g->v; i++){
         Tms[i] = new int[g->v+1];
     }
-    int T[g->v] = {0};
+    int *T = new int[g->v];
+    for(int i=0;i<g->v;i++){
+        T[i] = 0;
+    }
 
     bool check = false;
     while(!check){
-        int con[g->v] = {0};
+        int *con = new int[g->v];
         for(int i=1; i<=g->v; i++){
+            con[i] = 0;
             for(int j=1; j<=g->v; j++){
                 if(g->graph[i][j] != 0 && Tms[i][j] == 0 && g->S[j-1] != 0){
                     con[i-1]++;
@@ -79,8 +83,9 @@ int ** CMST(Graph* g){
 
         check = true;
         for(int i=0;i<g->v;i++){
-            if(g->S[i] != 0 && T[i] == 0)
+            if(g->S[i] != 0 && T[i] == 0){
                 check = false;
+            }
         }
     }
     return Tms;
@@ -288,7 +293,7 @@ int ** EDDA(Graph* g, int **Tms){
             }
         }
     }
-
+    
     // return completed Tedda graph
     return Tedda;
 }

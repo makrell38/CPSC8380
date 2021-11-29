@@ -25,13 +25,13 @@ void printData(vector<vector<string> > data){
 
 int main(){
 
-    /*
+    
     // read in data
     vector<vector<string> > data;
-    data = readInData("aws_edge_locations_na.csv");
+    data = readInData("dataSet/aws_edge_locations.csv");
     
     vector<vector<string> > cacheLocations;
-    cacheLocations = readInData("aws_cache_locations_na.csv");
+    cacheLocations = readInData("dataSet/aws_cache_locations.csv");
     
     // create graph
     // cloud node = 0
@@ -75,10 +75,11 @@ int main(){
     }
 
     g->setR(num_dest_servers);
-
-    g->printGraph();
-    */
+    cout<<num_dest_servers<<endl;
+    //g->printGraph();
+        
     
+    /*
     Graph *g = new Graph(10);
     g->delta = 9;
     g->dLimit = 2;
@@ -106,46 +107,48 @@ int main(){
     g->S[8] = 1;
     g->S[9] = 1;
     g->setR(6);
-    
+    */
 
-    /*
     ofstream myfile;
+    
+    
     myfile.open("randomOutput.txt", fstream::app);
 
-
-
-    auto start = std::chrono::high_resolution_clock::now();
-    //random(g);
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    myfile<<"1000 "<<duration.count()*100<<"\n";
-    cout<<duration.count()<<endl;
+    int costRand = random(g);
+    //cout<<costRand<<endl;
+    myfile<<g->v<<" "<<costRand<<"\n";
 
     myfile.close();
     
     myfile.open("greedyOutput.txt", fstream::app);
-    auto startg = std::chrono::high_resolution_clock::now();
-    greedy(g);
-    auto stopg = std::chrono::high_resolution_clock::now();
-    auto durationg = std::chrono::duration_cast<std::chrono::microseconds>(stopg - startg);
-    myfile<<"1000 "<<durationg.count()*100<<"\n";
-    cout<<durationg.count()<<endl;
-    */
 
+    int costGreedy = greedy(g);
+    myfile<<g->v<<" "<<costGreedy<<"\n";
+    myfile.close();
+    
+    
     //full(g);
 
-    /*
-    Graph *Tms = new Graph(10);
+    
+    Graph *Tms = new Graph(g->v);
     Tms->graph = CMST(g);
     //Tms->printGraph();
     Tms->printPath();
-    Graph *Tedda = new Graph(10);
+    Graph *Tedda = new Graph(g->v);
     Tedda->graph = EDDA(g, Tms->graph);
     //Tedda->printGraph();
     Tedda->printPath();
-    */
+    int costTedda = Tedda->computeCost();
+    cout<<costTedda<<endl;
+    
+    myfile.open("TeddaOutput.txt", fstream::app);
+    myfile<<g->v<<" "<<costTedda<<"\n";
+    myfile.close();
+    
 
     
+
+    /*
     vector<edge> klca = kLCA(g, 6);
     printEdges(klca);
     Graph *g2 = new Graph(10);
@@ -155,7 +158,11 @@ int main(){
     Graph *something = new Graph(10);
     something->graph = EDDA(g, g2->graph);
     something->printPath();
-    
+    int costklca = something->computeCost();
+    myfile.open("klcaOutput.txt", fstream::app);
+    myfile<<g->v<<" "<<costklca<<"\n";
+    myfile.close();
+    */
 
     return 0;
 }

@@ -10,7 +10,8 @@
 using namespace std;
 
 
-void sendToNeighbors(Graph* g, int* T, int node, int run){
+int sendToNeighbors(Graph* g, int* T, int node, int run){
+    int cost = 0;
     queue<int> reached;
     for(int i=1;i<=g->v;i++){
         if(i != node){
@@ -18,6 +19,7 @@ void sendToNeighbors(Graph* g, int* T, int node, int run){
                 if(g->S[i-1] == 1 && T[i-1] != 1){
                     T[i-1] = 1;
                     cout<<node<<" -> "<<i<<endl;
+                    cost++;
                     reached.push(i);
                 }
             }
@@ -28,12 +30,14 @@ void sendToNeighbors(Graph* g, int* T, int node, int run){
         while(!reached.empty()){
             next = reached.front();
             reached.pop();
-            sendToNeighbors(g,T,next,run+1);
+            cost += sendToNeighbors(g,T,next,run+1);
         }
     }
+    return cost;
 }
 
-void greedy(Graph* g){
+int greedy(Graph* g){
+    int cost=0;
     int T[g->v];
     int con[g->v];
     for(int i=0;i<g->v;i++){
@@ -64,7 +68,8 @@ void greedy(Graph* g){
             }
         }
         T[node-1] = 1;
-        sendToNeighbors(g,T,node,1);
+        cost += g->delta;
+        cost += sendToNeighbors(g,T,node,1);
         check = false;
         for(int i=0;i<g->v;i++){
             if(g->S[i] == 1 && T[i] != 1){
@@ -72,9 +77,11 @@ void greedy(Graph* g){
             }
         }
     }
+    return cost;
 }
 
-void random(Graph *g){
+int random(Graph *g){
+    int cost = 0;
     int T[g->v];
     for(int i=0;i<g->v;i++){
         T[i] = 0;
@@ -87,8 +94,9 @@ void random(Graph *g){
             node = rand()%g->v +1;
         }
         cout<<"C2E node: " << node <<endl;
+        cost += g->delta;
         T[node-1] = 1;
-        sendToNeighbors(g, T, node, 1);
+        cost += sendToNeighbors(g, T, node, 1);
         check = false;
         for(int i=0;i<g->v;i++){
             if(g->S[i] == 1 && T[i] != 1){
@@ -96,6 +104,7 @@ void random(Graph *g){
             }
         }
     }
+    return cost;
 }
 
 #endif
