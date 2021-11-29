@@ -25,13 +25,13 @@ void printData(vector<vector<string> > data){
 
 int main(){
 
-    
+    /*
     // read in data
     vector<vector<string> > data;
-    data = readInData("dataSet/aws_edge_locations.csv");
+    data = readInData("dataSet/aws_edge_locations_na.csv");
     
     vector<vector<string> > cacheLocations;
-    cacheLocations = readInData("dataSet/aws_cache_locations.csv");
+    cacheLocations = readInData("dataSet/aws_cache_locations_na.csv");
     
     // create graph
     // cloud node = 0
@@ -77,9 +77,9 @@ int main(){
     g->setR(num_dest_servers);
     cout<<num_dest_servers<<endl;
     //g->printGraph();
-        
+    */
     
-    /*
+    
     Graph *g = new Graph(10);
     g->delta = 9;
     g->dLimit = 2;
@@ -107,39 +107,51 @@ int main(){
     g->S[8] = 1;
     g->S[9] = 1;
     g->setR(6);
-    */
+    
 
     ofstream myfile;
     
     
-    myfile.open("randomOutput.txt", fstream::app);
-
+    myfile.open("randomOutputTime.txt", fstream::app);
+    auto startRand = std::chrono::high_resolution_clock::now();
     int costRand = random(g);
+    auto stopRand = std::chrono::high_resolution_clock::now();
+    auto durationRand = std::chrono::duration_cast<std::chrono::microseconds>(stopRand - startRand);
     //cout<<costRand<<endl;
-    myfile<<g->v<<" "<<costRand<<"\n";
+    myfile<<g->v<<" "<<durationRand.count()<<"\n";
 
     myfile.close();
     
-    myfile.open("greedyOutput.txt", fstream::app);
-
+    myfile.open("greedyOutputTime.txt", fstream::app);
+    auto startGreedy = std::chrono::high_resolution_clock::now();
     int costGreedy = greedy(g);
-    myfile<<g->v<<" "<<costGreedy<<"\n";
+    auto stopGreedy = std::chrono::high_resolution_clock::now();
+    auto durationGreedy = std::chrono::duration_cast<std::chrono::microseconds>(stopGreedy - startGreedy);
+    myfile<<g->v<<" "<<durationGreedy.count()<<"\n";
     myfile.close();
     
+    myfile.open("fullOutputTime.txt", fstream::app);
+    auto startFull = std::chrono::high_resolution_clock::now();
+    full(g);
+    auto stopFull = std::chrono::high_resolution_clock::now();
+    auto durationFull = std::chrono::duration_cast<std::chrono::microseconds>(stopFull - startFull);
+    myfile<<g->v<<" "<<durationFull.count()<<"\n";
+    myfile.close();
     
-    //full(g);
-
     
     Graph *Tms = new Graph(g->v);
+    auto startEdda = std::chrono::high_resolution_clock::now();
     Tms->graph = CMST(g);
-    //Tms->printGraph();
+    Tms->printGraph();
     Tms->printPath();
     Graph *Tedda = new Graph(g->v);
     Tedda->graph = EDDA(g, Tms->graph);
-    //Tedda->printGraph();
+    Tedda->printGraph();
     Tedda->printPath();
     int costTedda = Tedda->computeCost();
-    cout<<costTedda<<endl;
+    auto stopEdda = std::chrono::high_resolution_clock::now();
+    auto durationEdda = std::chrono::duration_cast<std::chrono::microseconds>(stopEdda - startEdda);
+    //cout<<costTedda<<endl;
     
     myfile.open("TeddaOutput.txt", fstream::app);
     myfile<<g->v<<" "<<costTedda<<"\n";
@@ -147,22 +159,24 @@ int main(){
     
 
     
-
-    /*
-    vector<edge> klca = kLCA(g, 6);
+    
+    myfile.open("klcaOutput.txt", fstream::app);
+    auto startKlca = std::chrono::high_resolution_clock::now();
+    vector<edge> klca = kLCA(g, g->numDestServers);
     printEdges(klca);
-    Graph *g2 = new Graph(10);
+    Graph *g2 = new Graph(g->v);
     for(std::vector<edge>::size_type it = 0; it != klca.size(); ++it){
         g2->graph[klca[it].v1][klca[it].v2] = klca[it].weight;
     }
-    Graph *something = new Graph(10);
+    Graph *something = new Graph(g->v);
     something->graph = EDDA(g, g2->graph);
     something->printPath();
     int costklca = something->computeCost();
-    myfile.open("klcaOutput.txt", fstream::app);
+    auto stopKlca = std::chrono::high_resolution_clock::now();
+    auto durationKlca = std::chrono::duration_cast<std::chrono::microseconds>(stopKlca - startKlca);
     myfile<<g->v<<" "<<costklca<<"\n";
     myfile.close();
-    */
+    
 
     return 0;
 }
